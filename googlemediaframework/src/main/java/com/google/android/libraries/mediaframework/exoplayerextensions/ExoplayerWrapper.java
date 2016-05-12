@@ -43,6 +43,7 @@ import com.google.android.exoplayer.drm.StreamingDrmSessionManager;
 import com.google.android.exoplayer.hls.HlsSampleSource;
 import com.google.android.exoplayer.metadata.MetadataTrackRenderer;
 import com.google.android.exoplayer.metadata.MetadataTrackRenderer.MetadataRenderer;
+import com.google.android.exoplayer.metadata.id3.Id3Frame;
 import com.google.android.exoplayer.text.Cue;
 import com.google.android.exoplayer.text.TextRenderer;
 import com.google.android.exoplayer.upstream.BandwidthMeter;
@@ -59,7 +60,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * with one of a number of {@link RendererBuilder} classes to suit different use cases (e.g. DASH,
  * SmoothStreaming and so on).
  */
+//<<<<<<< HEAD
 public class ExoplayerWrapper implements ExoPlayerWrapperBase {
+//=======
+//public class ExoplayerWrapper implements ExoPlayer.Listener, ChunkSampleSource.EventListener,
+//    DefaultBandwidthMeter.EventListener, MediaCodecVideoTrackRenderer.EventListener,
+//    MediaCodecAudioTrackRenderer.EventListener, TextRenderer,
+//    StreamingDrmSessionManager.EventListener, DashChunkSource.EventListener,
+//        HlsSampleSource.EventListener, MetadataRenderer<List<Id3Frame>> {
+//>>>>>>> f1c8a237fa73cb38347c08bf3509259db9e0f6f2
 
   /**
    * Builds renderers for the player.
@@ -109,6 +118,14 @@ public class ExoplayerWrapper implements ExoPlayerWrapperBase {
      * @param e The error.
      */
     void onAudioTrackWriteError(AudioTrack.WriteException e);
+
+    /**
+     * Respond to error when running the audio track.
+     * @param bufferSize The buffer size.
+     * @param bufferSizeMs The buffer size in Ms.
+     * @param elapsedSinceLastFeedMs The time elapsed since last feed in Ms.
+     */
+    void onAudioTrackUnderrun(int bufferSize, long bufferSizeMs, long elapsedSinceLastFeedMs);
 
     /**
      * Respond to error in initializing the decoder.
@@ -208,7 +225,7 @@ public class ExoplayerWrapper implements ExoPlayerWrapperBase {
 
     void onDecoderInitialized(String decoderName, long elapsedRealtimeMs,
                               long initializationDurationMs);
-    void onAvailableRangeChanged(TimeRange availableRange);
+    void onAvailableRangeChanged(int sourceId, TimeRange availableRange);
   }
 
   /**
@@ -223,7 +240,7 @@ public class ExoplayerWrapper implements ExoPlayerWrapperBase {
    * A listener for receiving ID3 metadata parsed from the media stream.
    */
   public interface Id3MetadataListener {
-    void onId3Metadata(Map<String, Object> metadata);
+    void onId3Metadata(List<Id3Frame> metadata);
   }
 
   /**
@@ -815,6 +832,13 @@ public class ExoplayerWrapper implements ExoPlayerWrapperBase {
   }
 
   @Override
+  public void onAudioTrackUnderrun(int bufferSize, long bufferSizeMs, long elapsedSinceLastFeedMs) {
+    if (internalErrorListener != null) {
+      internalErrorListener.onAudioTrackUnderrun(bufferSize, bufferSizeMs, elapsedSinceLastFeedMs);
+    }
+  }
+
+  @Override
   public void onCryptoError(CryptoException e) {
     if (internalErrorListener != null) {
       internalErrorListener.onCryptoError(e);
@@ -826,11 +850,11 @@ public class ExoplayerWrapper implements ExoPlayerWrapperBase {
     // Do nothing.
   }
 
-  /* package */ MetadataTrackRenderer.MetadataRenderer<Map<String, Object>>
-      getId3MetadataRenderer() {
-    return new MetadataTrackRenderer.MetadataRenderer<Map<String, Object>>() {
+  /* package */ MetadataTrackRenderer.MetadataRenderer<List<Id3Frame>>
+  getId3MetadataRenderer() {
+    return new MetadataTrackRenderer.MetadataRenderer<List<Id3Frame>>() {
       @Override
-      public void onMetadata(Map<String, Object> metadata) {
+      public void onMetadata(List<Id3Frame> metadata) {
         if (id3MetadataListener != null) {
           id3MetadataListener.onId3Metadata(metadata);
         }
@@ -861,16 +885,16 @@ public class ExoplayerWrapper implements ExoPlayerWrapperBase {
   }
 
   @Override
-  public void onMetadata(Map<String, Object> metadata) {
+  public void onMetadata(List<Id3Frame> metadata) {
     if (id3MetadataListener != null && getSelectedTrack(TYPE_METADATA) != TRACK_DISABLED) {
       id3MetadataListener.onId3Metadata(metadata);
     }
   }
 
   @Override
-  public void onAvailableRangeChanged(TimeRange availableRange) {
+  public void onAvailableRangeChanged(int sourceId, TimeRange availableRange) {
     if (infoListener != null) {
-      infoListener.onAvailableRangeChanged(availableRange);
+      infoListener.onAvailableRangeChanged(sourceId, availableRange);
     }
   }
 

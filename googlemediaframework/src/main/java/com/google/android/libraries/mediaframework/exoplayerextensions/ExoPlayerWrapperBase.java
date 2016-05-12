@@ -22,11 +22,19 @@ import java.util.Map;
 /**
  * Created by clint on 30/11/15.
  */
+
+//ExoPlayer.Listener, ChunkSampleSource.EventListener,
+//        DefaultBandwidthMeter.EventListener, MediaCodecVideoTrackRenderer.EventListener,
+//        MediaCodecAudioTrackRenderer.EventListener, TextRenderer,
+//        StreamingDrmSessionManager.EventListener, DashChunkSource.EventListener,
+//        HlsSampleSource.EventListener, MetadataRenderer<List<Id3Frame>>
+
+
 public interface ExoPlayerWrapperBase extends ExoPlayer.Listener, ChunkSampleSource.EventListener,
         DefaultBandwidthMeter.EventListener, MediaCodecVideoTrackRenderer.EventListener,
         MediaCodecAudioTrackRenderer.EventListener, TextRenderer,
         StreamingDrmSessionManager.EventListener, DashChunkSource.EventListener,
-        HlsSampleSource.EventListener, MetadataTrackRenderer.MetadataRenderer<Map<String, Object>> {
+        HlsSampleSource.EventListener, MetadataRenderer<List<Id3Frame>> {
 
         interface TextListener {
                 void onText(String text);
