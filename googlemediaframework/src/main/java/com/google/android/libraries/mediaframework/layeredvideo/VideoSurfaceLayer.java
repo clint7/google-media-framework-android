@@ -21,6 +21,7 @@ import android.view.SurfaceHolder;
 import android.widget.FrameLayout;
 
 import com.google.android.libraries.mediaframework.R;
+import com.google.android.libraries.mediaframework.exoplayerextensions.ExoPlayerWrapperBase;
 import com.google.android.libraries.mediaframework.exoplayerextensions.ExoplayerWrapper;
 
 /**
@@ -68,7 +69,7 @@ public class VideoSurfaceLayer implements Layer {
   private SurfaceHolder.Callback surfaceHolderCallback = new SurfaceHolder.Callback() {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-      ExoplayerWrapper wrapper = layerManager.getExoplayerWrapper();
+      ExoPlayerWrapperBase wrapper = layerManager.getExoplayerWrapper();
       if (wrapper != null) {
         wrapper.setSurface(surfaceHolder.getSurface());
         if (wrapper.getSurface().isValid() ||

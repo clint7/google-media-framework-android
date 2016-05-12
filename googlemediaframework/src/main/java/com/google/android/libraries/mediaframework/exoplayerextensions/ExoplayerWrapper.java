@@ -59,11 +59,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * with one of a number of {@link RendererBuilder} classes to suit different use cases (e.g. DASH,
  * SmoothStreaming and so on).
  */
-public class ExoplayerWrapper implements ExoPlayer.Listener, ChunkSampleSource.EventListener,
-    DefaultBandwidthMeter.EventListener, MediaCodecVideoTrackRenderer.EventListener,
-    MediaCodecAudioTrackRenderer.EventListener, TextRenderer,
-    StreamingDrmSessionManager.EventListener, DashChunkSource.EventListener,
-        HlsSampleSource.EventListener, MetadataRenderer<Map<String, Object>> {
+public class ExoplayerWrapper implements ExoPlayerWrapperBase {
 
   /**
    * Builds renderers for the player.
@@ -74,22 +70,12 @@ public class ExoplayerWrapper implements ExoPlayer.Listener, ChunkSampleSource.E
      *
      * @param player The parent player.
      */
-    void buildRenderers(ExoplayerWrapper player);
+    void buildRenderers(ExoPlayerWrapperBase player);
 
     /**
      * Cancels the current build operation, if there is one. Else does nothing.
      */
     void cancel();
-  }
-
-  /**
-   * A listener for basic playback events.
-   */
-  public interface PlaybackListener {
-    void onStateChanged(boolean playWhenReady, int playbackState);
-    void onError(Exception e);
-    void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees,
-                            float pixelWidthHeightRatio);
   }
 
   /**
@@ -232,17 +218,6 @@ public class ExoplayerWrapper implements ExoPlayer.Listener, ChunkSampleSource.E
     void onCues(List<Cue> cues);
   }
 
-  /**
-   * A listener for receiving notifications of timed text.
-   */
-  public interface TextListener {
-
-    /**
-     * Respond to text arriving (ex subtitles, captions).
-     * @param text The received text.
-     */
-    public abstract void onText(String text);
-  }
 
   /**
    * A listener for receiving ID3 metadata parsed from the media stream.
@@ -493,6 +468,7 @@ public class ExoplayerWrapper implements ExoPlayer.Listener, ChunkSampleSource.E
     id3MetadataListener = listener;
   }
 
+  @Override
   public void setSurface(Surface surface) {
     this.surface = surface;
     pushSurfaceAndVideoTrack(false);
@@ -512,6 +488,7 @@ public class ExoplayerWrapper implements ExoPlayer.Listener, ChunkSampleSource.E
    * that this message is delivered, Exoplayer uses a blocking operation. Therefore, this method is
    * blocking.
    */
+  @Override
   public void blockingClearSurface() {
     surface = null;
     pushSurfaceAndVideoTrack(true);
@@ -529,6 +506,7 @@ public class ExoplayerWrapper implements ExoPlayer.Listener, ChunkSampleSource.E
    * Returns whether the track is {@link #PRIMARY_TRACK} or {@link #DISABLED_TRACK).
    * @param type The index indicating the type of video (ex {@link #TYPE_VIDEO}).
    */
+  @Override
   public int getStateForTrackType(int type) {
     return trackStateForType[type];
   }
@@ -678,6 +656,16 @@ public class ExoplayerWrapper implements ExoPlayer.Listener, ChunkSampleSource.E
     return bandwidthMeter;
   }
 
+  @Override
+  public long getBufferedPosition() {
+    return 0;
+  }
+
+  @Override
+  public int getTrackBitrate() {
+    return 0;
+  }
+
   public CodecCounters getCodecCounters() {
     return codecCounters;
   }
@@ -714,14 +702,14 @@ public class ExoplayerWrapper implements ExoPlayer.Listener, ChunkSampleSource.E
   /**
    * Return the looper of the Exoplayer instance which sits and waits for messages.
    */
-  Looper getPlaybackLooper() {
+  public Looper getPlaybackLooper() {
     return player.getPlaybackLooper();
   }
 
   /**
    * Returns the handler which responds to messages.
    */
-  Handler getMainHandler() {
+  public Handler getMainHandler() {
     return mainHandler;
   }
 

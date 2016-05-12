@@ -53,7 +53,7 @@ public class ExtractorRendererBuilder implements RendererBuilder {
     }
 
     @Override
-    public void buildRenderers(ExoplayerWrapper player) {
+    public void buildRenderers(ExoPlayerWrapperBase player) {
         Allocator allocator = new DefaultAllocator(BUFFER_SEGMENT_SIZE);
 
         // Build the video and audio renderers.

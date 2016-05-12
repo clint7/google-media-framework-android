@@ -109,7 +109,7 @@ public class SimpleVideoPlayer {
     layers.add(playbackControlLayer);
     layers.add(subtitleLayer);
 
-    layerManager = new LayerManager(activity,
+    layerManager = new MediaFrameworkLayerManager(activity,
         container,
         video,
         layers);

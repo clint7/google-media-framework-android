@@ -92,7 +92,7 @@ public class DashRendererBuilder implements RendererBuilder {
   }
 
   @Override
-  public void buildRenderers(ExoplayerWrapper player) {
+  public void buildRenderers(ExoPlayerWrapperBase player) {
     currentAsyncBuilder = new AsyncRendererBuilder(context, userAgent, url, drmCallback, player);
     currentAsyncBuilder.init();
   }
@@ -112,7 +112,7 @@ public class DashRendererBuilder implements RendererBuilder {
     private final Context context;
     private final String userAgent;
     private final MediaDrmCallback drmCallback;
-    private final ExoplayerWrapper player;
+    private final ExoPlayerWrapperBase player;
     private final ManifestFetcher<MediaPresentationDescription> manifestFetcher;
     private final UriDataSource manifestDataSource;
 
@@ -121,7 +121,7 @@ public class DashRendererBuilder implements RendererBuilder {
     private long elapsedRealtimeOffset;
 
     public AsyncRendererBuilder(Context context, String userAgent, String url,
-                                MediaDrmCallback drmCallback, ExoplayerWrapper player) {
+                                MediaDrmCallback drmCallback, ExoPlayerWrapperBase player) {
       this.context = context;
       this.userAgent = userAgent;
       this.drmCallback = drmCallback;

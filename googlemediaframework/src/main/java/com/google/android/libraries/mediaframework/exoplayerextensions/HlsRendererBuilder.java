@@ -64,7 +64,7 @@ public class HlsRendererBuilder implements RendererBuilder {
   private final String userAgent;
   private final String url;
 
-  private ExoplayerWrapper player;
+  private ExoPlayerWrapperBase player;
 
   private AsyncRendererBuilder currentAsyncBuilder;
 
@@ -75,7 +75,7 @@ public class HlsRendererBuilder implements RendererBuilder {
   }
 
   @Override
-  public void buildRenderers(ExoplayerWrapper player) {
+  public void buildRenderers(ExoPlayerWrapperBase player) {
     this.player = player;
     currentAsyncBuilder = new AsyncRendererBuilder(context, userAgent, url, player);
     currentAsyncBuilder.init();
@@ -94,12 +94,12 @@ public class HlsRendererBuilder implements RendererBuilder {
     private final Context context;
     private final String userAgent;
     private final String url;
-    private final ExoplayerWrapper player;
+    private final ExoPlayerWrapperBase player;
     private final ManifestFetcher<HlsPlaylist> playlistFetcher;
 
     private boolean canceled;
 
-    public AsyncRendererBuilder(Context context, String userAgent, String url, ExoplayerWrapper player) {
+    public AsyncRendererBuilder(Context context, String userAgent, String url, ExoPlayerWrapperBase player) {
       this.context = context;
       this.userAgent = userAgent;
       this.url = url;
