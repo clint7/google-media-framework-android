@@ -19,6 +19,7 @@ package com.google.android.libraries.mediaframework.layeredvideo;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.google.android.libraries.mediaframework.R;
@@ -171,5 +172,13 @@ public class VideoSurfaceLayer implements Layer {
     if (wrapper != null) {
       wrapper.removeListener(playbackListener);
     }
+  }
+
+  public void hide() {
+    surfaceView.setVisibility(View.INVISIBLE);
+  }
+
+  public void show() {
+    surfaceView.setVisibility(View.VISIBLE);
   }
 }
