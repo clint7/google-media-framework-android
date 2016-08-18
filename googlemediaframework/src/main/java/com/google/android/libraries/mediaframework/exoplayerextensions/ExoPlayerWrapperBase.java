@@ -13,10 +13,12 @@ import com.google.android.exoplayer.dash.DashChunkSource;
 import com.google.android.exoplayer.drm.StreamingDrmSessionManager;
 import com.google.android.exoplayer.hls.HlsSampleSource;
 import com.google.android.exoplayer.metadata.MetadataTrackRenderer;
+import com.google.android.exoplayer.metadata.id3.Id3Frame;
 import com.google.android.exoplayer.text.TextRenderer;
 import com.google.android.exoplayer.upstream.BandwidthMeter;
 import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +36,7 @@ public interface ExoPlayerWrapperBase extends ExoPlayer.Listener, ChunkSampleSou
         DefaultBandwidthMeter.EventListener, MediaCodecVideoTrackRenderer.EventListener,
         MediaCodecAudioTrackRenderer.EventListener, TextRenderer,
         StreamingDrmSessionManager.EventListener, DashChunkSource.EventListener,
-        HlsSampleSource.EventListener, MetadataRenderer<List<Id3Frame>> {
+        HlsSampleSource.EventListener, MetadataTrackRenderer.MetadataRenderer<List<Id3Frame>> {
 
         interface TextListener {
                 void onText(String text);

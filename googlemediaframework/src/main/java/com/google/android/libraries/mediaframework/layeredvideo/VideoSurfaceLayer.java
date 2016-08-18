@@ -16,6 +16,7 @@
 
 package com.google.android.libraries.mediaframework.layeredvideo;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.widget.FrameLayout;
@@ -57,6 +58,8 @@ public class VideoSurfaceLayer implements Layer {
 
     @Override
     public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthAspectRatio) {
+      Log.e("WTFWTFWTFWTFWTFWTF", "onVideoSizeChanged ");
+
       surfaceView.setVideoWidthHeightRatio(
           height == 0 ? 1 : (width * pixelWidthAspectRatio) / height);
     }
@@ -164,7 +167,7 @@ public class VideoSurfaceLayer implements Layer {
    * When you are finished using this object, call this method.
    */
   public void release() {
-    ExoplayerWrapper wrapper = layerManager.getExoplayerWrapper();
+    ExoPlayerWrapperBase wrapper = layerManager.getExoplayerWrapper();
     if (wrapper != null) {
       wrapper.removeListener(playbackListener);
     }
